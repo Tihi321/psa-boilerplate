@@ -1,5 +1,5 @@
 {
-  "name": "webview-frontend",
+  "name": "frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,13 +8,11 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "solid-js": "^1.8.7",
-    "socket.io-client": "^4.7.2"
-  },
   "devDependencies": {
-    "typescript": "^5.2.2",
-    "vite": "^5.0.8",
-    "vite-plugin-solid": "^2.8.0"
+    "typescript": "~5.6.2",
+    "vite": "^5.4.10"
+  },
+  "dependencies": {
+    "psa-api": "^0.0.1"
   }
 }

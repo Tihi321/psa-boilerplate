@@ -1,9 +1,11 @@
-import webview
+from config import DEV_URL, FRONTEND_DIST_FILE, WINDOW_TITLE
+import argparse
 import os
 from threading import Thread
 from backend.Main import Main
 import utils.assets as assets
 import utils.socket as socket
+import utils.window as window
 
 backend = Main()
 sio = socket.get_socket_server()
@@ -24,20 +26,23 @@ def message(sid, data):
     socket.sio.emit('message', f'Server received: {data}')
 
 def main():
+    parser = argparse.ArgumentParser(description="Process some arguments.")
+    parser.add_argument('--dev', action='store_true', help='Run in development mode')
+
     # Start Socket.IO server in a separate thread
     server_thread = Thread(target=socket.run_server, daemon=True)
     server_thread.start()
-
-    # In development, use Vite's dev server
-    if os.environ.get('DEV'):
-        url = "http://localhost:3000"
+    
+    args = parser.parse_args()
+    isDev = args.dev
+    
+    if isDev:
+        print("Running in development mode")
     else:
-        # In production, use the built files
-        url = assets.get_asset_path(os.path.join('frontend', 'dist', 'index.html'))
+        print("Running in normal mode")
 
-    # Create and start webview window
-    webview.create_window('Solid + Python WebView', url, width=800, height=600)
-    webview.start(debug=True)
+    url = DEV_URL if isDev else assets.get_asset_path(os.path.join(FRONTEND_DIST_FILE))
+    window.create_window(WINDOW_TITLE, url, debug=isDev)
 
 
 if __name__ == '__main__':
