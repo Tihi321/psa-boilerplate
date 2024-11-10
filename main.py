@@ -6,18 +6,19 @@ import utils.assets as assets
 import utils.socket as socket
 
 backend = Main()
+sio = socket.get_socket_server()
 
 # Socket.IO event handlers
-@socket.sio.event
+@sio.event
 def connect(sid, environ):
     print(f'Client connected: {sid}')
-    socket.sio.emit('message', backend.greet())
+    sio.emit('message', backend.greet())
 
-@socket.sio.event
+@sio.event
 def disconnect(sid):
     print(f'Client disconnected: {sid}')
 
-@socket.sio.event
+@sio.event
 def message(sid, data):
     print(f'Message received: {data}')
     socket.sio.emit('message', f'Server received: {data}')
