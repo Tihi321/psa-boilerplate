@@ -1,0 +1,4 @@
+pywebview==4.4.1
+python-socketio==5.11.1
+eventlet==0.33.3
+pyinstaller==6.3.0
