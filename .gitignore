@@ -1,2 +1,5 @@
+__pycache__
+utils/__pycache__
+backend/__pycache__
 venv
 frontend/node_modules
