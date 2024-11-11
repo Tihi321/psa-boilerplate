@@ -4,11 +4,6 @@ from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 
 block_cipher = None
 
-# Collect all required modules
-hidden_imports = collect_submodules('webview') + \
-                collect_submodules('socketio') + \
-                collect_submodules('eventlet')
-
 # Frontend dist directory (after building)
 frontend_dist = os.path.join('frontend', 'dist')
 
@@ -19,7 +14,25 @@ a = Analysis(
     datas=[
         (frontend_dist, os.path.join('frontend', 'dist')),
     ],
-    hiddenimports=hidden_imports,
+    hiddenimports=[
+        'webview',
+        'socketio',
+        'eventlet.hubs.epolls',
+        'eventlet.hubs.kqueue',
+        'eventlet.hubs.selects',
+        'dns', 
+        'dns.dnssec',
+        'dns.e164',
+        'dns.hash',
+        'dns.namedict',
+        'dns.tsigkeyring',
+        'dns.update',
+        'dns.version',
+        'dns.versioned',
+        'dns.asyncresolver',
+        'dns.asyncquery',
+        'dns.zone'
+        ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -39,7 +52,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='SolidPyWebview',
+    name='PSAApp',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
