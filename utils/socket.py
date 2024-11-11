@@ -1,6 +1,10 @@
-import eventlet
+import eventlet.wsgi
+import eventlet.greenio
+import eventlet.support
+import eventlet.corolocal
+import eventlet.green.BaseHTTPServer
+import eventlet.green.socket
 import socketio
-from eventlet import wsgi
 
 sio = socketio.Server(
     cors_allowed_origins='*',
@@ -19,4 +23,4 @@ def get_socket_app():
 
 def run_server():
     """Run the Socket.IO server"""
-    wsgi.server(eventlet.listen(('127.0.0.1', 5000)), app, log_output=True)
+    eventlet.wsgi.server(eventlet.listen(('127.0.0.1', 5000)), app, log_output=True)
