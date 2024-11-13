@@ -13,6 +13,6 @@
     "vite": "^5.4.10"
   },
   "dependencies": {
-    "psa-api": "^0.0.1"
+    "psa-api": "^0.0.2"
   }
 }

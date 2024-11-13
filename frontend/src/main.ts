@@ -1,11 +1,11 @@
 import "./style.css";
 import typescriptLogo from "./typescript.svg";
 import viteLogo from "/vite.svg";
-import { initializeSocket } from "psa-api";
 import { setupButtons } from "./buttons.ts";
+import { initializeSocket } from "psa-api";
 
-initializeSocket(() => {
-  console.log("Connected to Python backend!");
+initializeSocket((value) => {
+  console.log(value);
 });
 
 document.querySelector<HTMLDivElement>("#header")!.innerHTML = `

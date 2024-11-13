@@ -1,26 +1,37 @@
-import eventlet.wsgi
-import eventlet.greenio
-import eventlet.support
-import eventlet.corolocal
-import eventlet.green.BaseHTTPServer
-import eventlet.green.socket
-import socketio
+import asyncio
+import websockets
+import json
 
-sio = socketio.Server(
-    cors_allowed_origins='*',
-    async_mode='eventlet',
-    async_handlers=True,
-    logger=True,
-    engineio_logger=True
-)
-app = socketio.WSGIApp(sio)
+connected_clients = set()
 
-def get_socket_server():
-    return sio
+async def handle_client(websocket):
+    """Handle individual client connections"""
+    connected_clients.add(websocket)
+    try:
+        async for message in websocket:
+            try:
+                data = json.loads(message)
+                # Handle the message and send response
+                response = {'type': 'message', 'data': f'Server received: {data}'}
+                await websocket.send(json.dumps(response))
+            except json.JSONDecodeError:
+                print(f"Invalid JSON received: {message}")
+    except websockets.exceptions.ConnectionClosed:
+        print("Client connection closed")
+    finally:
+        connected_clients.remove(websocket)
 
-def get_socket_app():
-    return app
+async def websocket_server():
+    """Create and run the WebSocket server"""
+    async with websockets.serve(handle_client, "127.0.0.1", 5000):
+        await asyncio.Future()  # run forever
 
 def run_server():
-    """Run the Socket.IO server"""
-    eventlet.wsgi.server(eventlet.listen(('127.0.0.1', 5000)), app, log_output=True)
+    """Run the WebSocket server in a separate thread"""
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(websocket_server())
+
+def broadcast_message(message):
+    """Broadcast a message to all connected clients"""
+    websockets.broadcast(connected_clients, json.dumps(message))
